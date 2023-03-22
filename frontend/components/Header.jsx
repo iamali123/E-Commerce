@@ -6,6 +6,7 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { BsCart } from "react-icons/bs";
 import { BiMenuAltRight } from "react-icons/bi";
 import { VscChromeClose } from "react-icons/vsc";
+import MenuMobile from "./MenuMobile";
 
 const Header = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -13,6 +14,28 @@ const Header = () => {
   const [show, setShow] = useState("translate-y-0");
   const [lastScrollY, setLastScrollY] = useState(0);
   const [categories, setCategories] = useState(null);
+
+
+   const controlNav = () => {
+    if (window.scrollY > 200) {
+      if (window.scrollY > lastScrollY && !mobileMenu) {
+          setShow("-translate-y-[80px]");
+      } else {
+          setShow("shadow-sm");
+      }
+  } else {
+      setShow("translate-y-0");
+  }
+  setLastScrollY(window.scrollY);
+   }
+
+  useEffect(() => {
+    window.addEventListener("scroll", controlNav);
+    return () => {
+      window.removeEventListener("scroll", controlNav);
+    }
+  }, [lastScrollY])
+  
 
   return (
     <header
@@ -23,6 +46,15 @@ const Header = () => {
           <img src="/logo.svg" className="w-[40px] md:w-[60px]" />
         </Link>
         <Menu showCatMenu={showCatMenu} setShowCatMenu={setShowCatMenu} />
+        {
+          mobileMenu && (
+            <MenuMobile
+            showCatMenu={showCatMenu}
+            setShowCatMenu={setShowCatMenu}
+            setMobileMenu={setMobileMenu}
+          />
+          )
+        }
         <div className="flex items-center gap-2 text-black">
           {/* Icon start */}
           <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center items-center hover:bg-black/[0.05] cursor-pointer relative">
@@ -43,6 +75,21 @@ const Header = () => {
             </div>
           </Link>
           {/* Icon end */}
+          {/* Mobile icon start */}
+          <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex md:hidden justify-center items-center hover:bg-black/[0.05] cursor-pointer relative -mr-2">
+            {mobileMenu ? (
+              <VscChromeClose
+                className="text-[16px]"
+                onClick={() => setMobileMenu(false)}
+              />
+            ) : (
+              <BiMenuAltRight
+                className="text-[20px]"
+                onClick={() => setMobileMenu(true)}
+              />
+            )}
+          </div>
+          {/* Mobile icon end */}
         </div>
       </Wrapper>
     </header>
