@@ -1,8 +1,13 @@
+import { useEffect, useState } from "react";
 import HeroBanner from "@/components/heroBanner";
 import ProductCard from "@/components/ProductCard";
 import Wrapper from "@/components/Wrapper";
+import { fetchDataFromApi } from "@/utils/api";
 
-export default function Home() {
+
+export default function Home({products}) {
+console.log("🚀 ~ file: index.js:9 ~ Home ~ products:", products)
+
   return (
     <>
         <HeroBanner />
@@ -22,12 +27,21 @@ export default function Home() {
 
                 {/* products grid start */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
-                    {[0,1,2,3].map((item) => (
-                        <ProductCard key={item?.id} />
+                {products?.data?.map((product) => (
+                        <ProductCard key={product?.id} data={product} />
                     ))}
                 </div>
                 {/* products grid end */}
         </Wrapper>
     </>
   )
+}
+
+
+export async function getStaticProps() {
+    const products = await fetchDataFromApi("/api/products?populate=*");
+
+    return {
+        props: { products },
+    };
 }
