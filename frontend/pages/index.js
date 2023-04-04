@@ -6,7 +6,6 @@ import { fetchDataFromApi } from "@/utils/api";
 
 
 export default function Home({products}) {
-console.log("🚀 ~ file: index.js:9 ~ Home ~ products:", products)
 
   return (
     <>
